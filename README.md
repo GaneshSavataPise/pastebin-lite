@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Pastebin Lite
 
-## Getting Started
+Pastebin Lite is a minimal Pastebin-like web application that allows users to create text pastes and share them using a unique URL. Each paste can optionally expire based on time (TTL) or number of views.
 
-First, run the development server:
+## How to Run the Project Locally
 
-```bash
+### Prerequisites
+- Node.js (v18 or later)
+- npm
+
+### Steps
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/GaneshSavataPise/pastebin-lite.git
+   cd pastebin-lite
+
+
+Install dependencies:
+
+npm install
+
+
+Create a .env file in the project root:
+
+DATABASE_URL="file:./dev.db"
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+
+
+Run database migrations:
+
+npx prisma migrate dev
+
+
+Start the development server:
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Open the application in your browser:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+http://localhost:3000
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Persistence Layer
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The application uses SQLite as the persistence layer, managed through Prisma ORM. SQLite provides persistent storage across requests and is suitable for automated testing and serverless deployments.
 
-## Deploy on Vercel
+Design Decisions
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Built using Next.js App Router for routing and API endpoints.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Prisma ORM is used for database access in a serverless-safe manner.
+
+Pastes support optional time-based expiry (TTL) and view-count limits.
+
+A paste becomes unavailable as soon as any configured constraint is triggered.
+
+Deterministic TTL testing is supported using TEST_MODE=1 and the x-test-now-ms request header.
+
+Paste content is rendered safely to prevent script execution.
+
+Environment variables are used to avoid hardcoded configuration.
